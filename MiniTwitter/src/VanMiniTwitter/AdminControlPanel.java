@@ -245,7 +245,6 @@ public class AdminControlPanel extends JFrame {
 				if ( id != null && !id.getAllowsChildren()) {
 					String userId = id.toString();
 					User user = system.findUser(userId);
-					
 					// Opens window
 					UserView temp = new UserView(user, system);
 					temp.setTitle(userId);
@@ -265,7 +264,7 @@ public class AdminControlPanel extends JFrame {
 		textPane.setEditable(false);
 		
 		JButton btnUserTotal = new JButton("Show User Total");
-		btnUserTotal.setFont(new Font("Calibri", Font.PLAIN, 16)); 
+		btnUserTotal.setFont(new Font("Calibri", Font.PLAIN, 12)); 
 		
 		/*
 		 * VISITOR : shows total users in system
@@ -297,7 +296,7 @@ public class AdminControlPanel extends JFrame {
 				textPane.setText(message);
 			}
 		});
-		btnShowGroupTotal.setFont(new Font("Calibri", Font.PLAIN, 16));
+		btnShowGroupTotal.setFont(new Font("Calibri", Font.PLAIN, 12));
 		
 		
 		
@@ -349,6 +348,44 @@ public class AdminControlPanel extends JFrame {
 		});
 		
 
+	
+		/*
+		 * VISITOR : checks if ID's are valid
+		 */
+		JButton btnAreIdsValid = new JButton("Are ID's Valid");
+		btnAreIdsValid.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				AreValidIDSysEntryVisitor isValid = new AreValidIDSysEntryVisitor();
+				boolean result = system.accept(isValid);
+				
+				if(result == true) {
+					textPane.setText("ID's are all valid.");
+				}
+				else {
+					textPane.setText("ID's are not all valid!");
+				}
+			}
+		});
+		btnAreIdsValid.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		
+		
+		/*
+		 * VISITOR : finds the last updated user
+		 */
+		JButton btnLastUpdatedUser = new JButton("Last Updated User");
+		btnLastUpdatedUser.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnLastUpdatedUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				LastUpdatedSysEntryVisitor userID = new LastUpdatedSysEntryVisitor();
+				User lastUpdatedID = system.accept(userID);
+				
+				textPane.setText(lastUpdatedID.getId());
+
+			}
+		});
+		
+		
 		
 		
 		/*
@@ -358,70 +395,61 @@ public class AdminControlPanel extends JFrame {
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(treeGroupsUsers, GroupLayout.PREFERRED_SIZE, 217, 
-							GroupLayout.PREFERRED_SIZE)
+					.addComponent(treeGroupsUsers, GroupLayout.PREFERRED_SIZE, 217, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(textPane, GroupLayout.DEFAULT_SIZE, 259, 
-								Short.MAX_VALUE)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addComponent(btnShowMessageTotal, GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
+						.addComponent(textPane, GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(
-									Alignment.TRAILING, false)
-								.addComponent(txtGroupId, Alignment.LEADING, 149, 149, 
-										Short.MAX_VALUE)
-								.addComponent(btnOpenUserView, Alignment.LEADING,
-										GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, 
-										Short.MAX_VALUE)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+								.addComponent(txtGroupId, Alignment.LEADING, 149, 149, Short.MAX_VALUE)
+								.addComponent(btnOpenUserView, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 								.addComponent(txtUserId))
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, 
-									false)
-								.addComponent(btnAddUser, GroupLayout.DEFAULT_SIZE, 
-										GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(btnAddGroup, GroupLayout.DEFAULT_SIZE, 
-										GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-						.addComponent(btnShowMessageTotal, GroupLayout.DEFAULT_SIZE, 259, 
-								Short.MAX_VALUE)
-						.addComponent(btnShowGroupTotal, GroupLayout.DEFAULT_SIZE, 259, 
-								Short.MAX_VALUE)
-						.addComponent(btnShowPositivePercentage, GroupLayout.DEFAULT_SIZE, 
-								259, Short.MAX_VALUE)
-						.addComponent(btnUserTotal, GroupLayout.DEFAULT_SIZE, 259, 
-								Short.MAX_VALUE))
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(btnAddUser, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(btnAddGroup, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+						.addComponent(btnShowPositivePercentage, GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+								.addComponent(btnAreIdsValid, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(btnUserTotal, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(btnShowGroupTotal, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(btnLastUpdatedUser, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
 					.addGap(152))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(treeGroupsUsers, GroupLayout.DEFAULT_SIZE, 
-								GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(treeGroupsUsers, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(
-									Alignment.BASELINE)
-								.addComponent(txtUserId, GroupLayout.PREFERRED_SIZE, 35, 
-										GroupLayout.PREFERRED_SIZE)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(txtUserId, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
 								.addComponent(btnAddUser))
 							.addGap(1)
-							.addGroup(gl_contentPane.createParallelGroup(
-									Alignment.BASELINE)
-								.addComponent(txtGroupId, GroupLayout.PREFERRED_SIZE, 35, 
-										GroupLayout.PREFERRED_SIZE)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(txtGroupId, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
 								.addComponent(btnAddGroup))
 							.addGap(1)
 							.addComponent(btnOpenUserView)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(textPane, GroupLayout.PREFERRED_SIZE, 54, 
-									GroupLayout.PREFERRED_SIZE)
+							.addComponent(textPane, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnUserTotal)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnUserTotal)
+								.addComponent(btnShowGroupTotal))
+							.addGap(5)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnAreIdsValid)
+								.addComponent(btnLastUpdatedUser))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(btnShowMessageTotal)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnShowGroupTotal)
-							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(btnShowPositivePercentage)))
-					.addContainerGap(37, Short.MAX_VALUE))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 	}

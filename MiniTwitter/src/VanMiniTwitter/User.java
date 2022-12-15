@@ -4,28 +4,44 @@ import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
-// Represents a user
+//Represents a user
 public class User extends Subject implements SystemEntry, Observer {
 	
 	// Instance variables
 	private String userID;
+	private long creationTime;
+	private long lastUpdateTime;
 	private ArrayList<User> currentlyFollowing;
 	private ArrayList<String> messages;
 	DefaultListModel newsFeedModel;
 	
+	
 	// Constructor
 	public User(String userID) {
 		this.userID = userID;
+		this.creationTime = System.currentTimeMillis();
+		this.lastUpdateTime = this.creationTime;
 		this.currentlyFollowing = new ArrayList<User>();
 		this.messages = new ArrayList<String>();
 		this.newsFeedModel = new DefaultListModel();
+		System.out.println("TIME:" + creationTime + "\tID: " + userID);
 	}
 
 	@Override
 	public String getId() {
 		return this.userID;
 	}
-
+	
+	@Override
+	public long getCreationTime() {
+		return this.creationTime;
+		
+	}
+	
+	public long getLastUpdateTime() {
+		return this.lastUpdateTime;
+	}
+	
 	public ArrayList<String> getMessages() {
 		return this.messages;
 	}
@@ -55,6 +71,7 @@ public class User extends Subject implements SystemEntry, Observer {
 	 */
 	public void postMessage(String message) {
 		this.messages.add(message);
+		this.lastUpdateTime = System.currentTimeMillis();
 		this.newsFeedModel.insertElementAt(userID + " : " + message, 0);
 		notifyObservers();				
 	}
@@ -70,9 +87,20 @@ public class User extends Subject implements SystemEntry, Observer {
 		
 		String message = ((User)updatedUser).getId() + " : " + 
 							((User)updatedUser).getMessages().get(index);
-		
+
+		this.lastUpdateTime = ((User)updatedUser).getLastUpdateTime();
 		// Adds updatedUser's message post to this user's feed
 		this.newsFeedModel.insertElementAt(message , 0);
 		
+	}
+
+	@Override
+	public boolean accept(SysEntryVisitorCheck visitor) {
+		return visitor.visit(this);
+	}
+
+	@Override
+	public User accept(SysEntryVisitorFind visitor) {
+		return visitor.visit(this);
 	}
 }

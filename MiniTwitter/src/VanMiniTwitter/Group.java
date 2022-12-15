@@ -2,21 +2,30 @@ package VanMiniTwitter;
 
 import java.util.ArrayList;
 
-// Visitor & Composite
+//Visitor & Composite
 public class Group implements SystemEntry {
 	// Instance variables
 	private String groupId;
+	private long creationTime;
 	private ArrayList<SystemEntry> groupsAndUsers;
 	
 	// Constructor
 	public Group(String groupId) {
 		this.groupId = groupId;
+		this.creationTime = System.currentTimeMillis();
 		groupsAndUsers  = new ArrayList<SystemEntry>();
 	}
 	
 	@Override
 	public String getId() {
 		return this.groupId;
+		
+	}
+	
+	@Override
+	public long getCreationTime() {
+		return this.creationTime;
+		
 	}
 	
 	public ArrayList<SystemEntry> getGroupsAndUsers() {
@@ -101,6 +110,16 @@ public class Group implements SystemEntry {
 		}
 		
 		return user;
+	}
+
+	@Override
+	public boolean accept(SysEntryVisitorCheck visitor) {
+		return visitor.visit(this);
+	}
+	
+	@Override
+	public User accept(SysEntryVisitorFind visitor) {
+		return visitor.visit(this);
 	}
 
 }
